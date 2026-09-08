@@ -1,0 +1,21 @@
+{
+  "name": "smart-folders",
+  "version": "0.1.0",
+  "displayName": "Smart Folders",
+  "description": "Named virtual folders that combine exact Mailspring folders and labels across accounts.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hburaktasyurek/Mailspring-Smart-Folders.git"
+  },
+  "main": "./lib/main",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "mailspring": ">=1.23.0"
+  },
+  "windowTypes": {
+    "default": true
+  },
+  "license": "GPL-3.0-only"
+}
