@@ -1,6 +1,7 @@
 # Mailspring Smart Folders
 
 [![CI](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/actions/workflows/test.yml/badge.svg)](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/actions/workflows/test.yml)
+[![Latest release](https://img.shields.io/github/v/release/hburaktasyurek/Mailspring-Smart-Folders)](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/releases/latest)
 [![License: GPL-3.0-only](https://img.shields.io/badge/License-GPL--3.0--only-blue.svg)](LICENSE.md)
 
 **Mailspring Smart Folders** is an open-source [Mailspring](https://www.getmailspring.com/) plugin for email productivity: create named, read-only virtual folders that combine exact IMAP folders or labels across one or more accounts. It uses Mailspring's normal thread list and reader, so a Smart Folder is a view of existing mail—not a server-side folder or a copy of messages.
@@ -11,7 +12,7 @@
 
 ## Quick start
 
-- **Install:** extract the checked-in [mailspring-smart-folders-0.1.0.zip](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/raw/main/dist/mailspring-smart-folders-0.1.0.zip) archive, then choose **Developer > Install a Plugin...** in Mailspring and select the extracted `smart-folders` directory.
+- **Install:** download and extract the latest [mailspring-smart-folders.zip](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/releases/latest/download/mailspring-smart-folders.zip) release asset, then choose **Developer > Install a Plugin...** in Mailspring and select the extracted `smart-folders` directory.
 - **Create a view:** select **+** in the **Smart Folders** sidebar heading, name the view, select its source folders or labels, and select **Save**.
 - **Use it:** select the Smart Folder to load the union of its sources in Mailspring's normal thread list.
 - **Verified compatibility:** Mailspring `1.23.0-5b371811` on macOS `26.6.2`. Windows and Linux have not been tested.
@@ -31,9 +32,9 @@
 
 ## Install
 
-The checked-in installation archive is self-contained; no build or `npm install` step is required.
+The installation archive attached to each [GitHub Release](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/releases/latest) is self-contained; no build or `npm install` step is required.
 
-1. Download and extract [mailspring-smart-folders-0.1.0.zip](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/raw/main/dist/mailspring-smart-folders-0.1.0.zip).
+1. Download and extract the latest [mailspring-smart-folders.zip](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/releases/latest/download/mailspring-smart-folders.zip).
 2. Keep Mailspring running. In Mailspring, choose **Developer > Install a Plugin...**.
 3. Select the extracted `smart-folders` directory.
 4. Confirm that **Smart Folders** appears in the main sidebar. Restart Mailspring only if it does not appear.
@@ -103,8 +104,16 @@ For questions, bugs, and feature requests, use [GitHub Issues](https://github.co
 
 ## Development verification
 
+Run the behavior suite:
+
 ```sh
 npm test
+```
+
+Build the same deterministic archive published by the release workflow:
+
+```sh
+npm run build:release
 ```
 
 The test suite uses Node's built-in test runner and has no external dependencies. Detailed application and criterion evidence is in [VERIFICATION.md](VERIFICATION.md); the bounded product contract is in [SPEC.md](SPEC.md).

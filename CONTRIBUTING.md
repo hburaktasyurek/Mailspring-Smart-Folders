@@ -14,7 +14,8 @@ Open a [GitHub Issue](https://github.com/hburaktasyurek/Mailspring-Smart-Folders
    ```
 
    The test suite uses Node's built-in test runner and has no external dependencies.
-3. For a UI change, install the changed plugin directory in Mailspring using **Developer > Install a Plugin...** and manually exercise the affected sidebar, editor, and context-menu behavior. Use the tested configuration when available: Mailspring `1.23.0-5b371811` on macOS `26.6.2`.
+3. Run `npm run build:release` when changing package contents or release documentation.
+4. For a UI change, install the changed plugin directory in Mailspring using **Developer > Install a Plugin...** and manually exercise the affected sidebar, editor, and context-menu behavior. Use the tested configuration when available: Mailspring `1.23.0-5b371811` on macOS `26.6.2`.
 
 ## Protect mail and privacy
 
@@ -25,3 +26,7 @@ Open a [GitHub Issue](https://github.com/hburaktasyurek/Mailspring-Smart-Folders
 ## Submit focused pull requests
 
 Keep each pull request focused on one issue or narrowly described improvement. Include the linked issue, the behavior changed, the verification performed, and any manual Mailspring checks required by a UI change. Update user-facing guidance when the install, use, compatibility, limitation, or trust-boundary contract changes.
+
+## Publish a release
+
+Maintainers publish releases by updating the `package.json` version, committing the change, and pushing a matching `vX.Y.Z` tag. The release workflow rejects mismatched tags, runs the behavior suite, builds `mailspring-smart-folders.zip`, and attaches it to the generated GitHub Release.

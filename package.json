@@ -23,7 +23,8 @@
   ],
   "main": "./lib/main",
   "scripts": {
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "build:release": "python3 scripts/build-release.py"
   },
   "engines": {
     "mailspring": ">=1.23.0"

@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+      - name: Test
+        run: npm test
+      - name: Build release archive
+        run: python3 scripts/build-release.py --tag "$GITHUB_REF_NAME"
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/mailspring-smart-folders.zip --verify-tag --generate-notes --title "Smart Folders $GITHUB_REF_NAME"
