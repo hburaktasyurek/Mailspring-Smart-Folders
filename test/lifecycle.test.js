@@ -24,7 +24,7 @@ function loadPlugin() {
     currentPerspective: null,
     focusedPerspectives: [],
     inboxPerspectives: [],
-    mixedVisibilityDeactivations: 0,
+    smartFolderVisibilityDeactivations: 0,
     storeDeactivations: 0,
     unregisteredComponents: [],
   };
@@ -118,9 +118,9 @@ function loadPlugin() {
     }
     if (request === './smart-folder-visibility') {
       return {
-        activateMixedVisibility() {},
-        deactivateMixedVisibility() {
-          state.mixedVisibilityDeactivations += 1;
+        activateSmartFolderVisibility() {},
+        deactivateSmartFolderVisibility() {
+          state.smartFolderVisibilityDeactivations += 1;
         },
       };
     }
@@ -175,7 +175,7 @@ test('deactivation closes the mounted editor, unregisters the sidebar, and retur
   assert.equal(state.focusedPerspectives.length, 1);
   assert.equal(state.focusedPerspectives[0], state.inboxPerspectives[0]);
   assert.deepEqual(state.focusedPerspectives[0].accounts, [{id: 'account-a'}]);
-  assert.equal(state.mixedVisibilityDeactivations, 1);
+  assert.equal(state.smartFolderVisibilityDeactivations, 1);
   assert.equal(state.storeDeactivations, 1);
 
   mountedEditor.componentWillUnmount();
@@ -192,6 +192,6 @@ test('deactivation leaves a non-Smart Folder perspective and modal untouched', {
   assert.deepEqual(state.unregisteredComponents, [SmartFoldersSidebar]);
   assert.deepEqual(state.focusedPerspectives, []);
   assert.equal(state.currentPerspective, existingPerspective);
-  assert.equal(state.mixedVisibilityDeactivations, 1);
+  assert.equal(state.smartFolderVisibilityDeactivations, 1);
   assert.equal(state.storeDeactivations, 1);
 });

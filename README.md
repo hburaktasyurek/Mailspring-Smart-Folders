@@ -4,7 +4,7 @@ A general-purpose Mailspring plugin for named virtual folders that combine exact
 
 ## Features
 
-- Multiple named Smart Folders in a dedicated sidebar section.
+- Multiple named Smart Folders in a native section directly below **All Accounts**, inside the same scrolling sidebar.
 - Account-grouped, hierarchical source picker.
 - Any number of exact source folders or labels from one or more accounts.
 - Native Mailspring thread list and message reader.
@@ -12,7 +12,8 @@ A general-purpose Mailspring plugin for named virtual folders that combine exact
 - Persistent create, edit, and delete workflows.
 - Live native query subscriptions for synchronized data changes.
 - Explicit warnings for unavailable sources; remaining valid sources continue to work.
-- No external services, telemetry, runtime dependencies, or secondary mail database.
+- No additional packages, services, telemetry, or secondary mail database; works offline against Mailspring's synchronized mail.
+- Native menus use Mailspring's bundled `@electron/remote` on tested Mailspring `1.23.0`.
 
 ## Compatibility
 
@@ -27,35 +28,42 @@ Verified with:
 
 The release archive is self-contained; no build or `npm install` step is required.
 
+1. Download and extract [mailspring-smart-folders-0.1.0.zip](dist/mailspring-smart-folders-0.1.0.zip).
+2. Keep Mailspring running. In Mailspring, choose **Developer > Install a Plugin...**.
+3. Select the extracted `smart-folders` directory.
+4. Confirm that **Smart Folders** appears in the main sidebar. Restart Mailspring only if it does not appear.
+
+### Manual package installation fallback
+
+Use this fallback only when **Developer > Install a Plugin...** is unavailable:
+
 1. Quit Mailspring.
-2. Extract `mailspring-smart-folders-0.1.0.zip`.
-3. In Mailspring, use **Developer > Install a Plugin...** and select the extracted `smart-folders` directory. If that menu is unavailable on macOS, copy or symlink the directory to:
+2. Copy the extracted `smart-folders` directory to the applicable package path:
 
-   ```text
-   ~/Library/Application Support/Mailspring/packages/smart-folders
-   ```
+   | Platform | Package path |
+   | --- | --- |
+   | macOS | `~/Library/Application Support/Mailspring/packages/smart-folders` |
+   | Windows | `%APPDATA%\Mailspring\packages\smart-folders` |
+   | Linux | `~/.config/Mailspring/packages/smart-folders` |
 
-4. Relaunch Mailspring.
-5. Confirm that **Smart Folders** appears in the main sidebar.
+3. Relaunch Mailspring and confirm that **Smart Folders** appears in the main sidebar.
 
 Only install plugin archives from sources you trust. Mailspring plugins execute inside the application and can access local mail data.
 
 ## Use
 
-1. Select **Add** in the **Smart Folders** sidebar section.
+1. Select the **+** button in the **Smart Folders** sidebar heading.
 2. Enter a name.
 3. Select one or more source folders or labels. Sources are grouped by account; nested rows are presentation only, and every checkbox selects exactly that folder.
 4. Select **Save**.
 5. Select the Smart Folder row to load its union in Mailspring's normal thread list.
-6. Use **Edit** to rename or change sources. Use **Delete** to remove only the virtual definition; mail is never deleted.
+6. Right-click a row or open its **•••** button to display the native Mailspring/macOS context menu, matching ordinary folder rows, for editing or deleting it. Deleting removes only the virtual definition; mail is never deleted.
 
 A missing folder or removed account is shown with an unavailable-source warning. Available sources continue to populate the Smart Folder. If no source remains available, the list shows an explanatory empty state. Editing the definition lets you remove unavailable sources.
 
 ## Update
 
-1. Quit Mailspring.
-2. Replace the installed `smart-folders` directory with the newer release while keeping the package name `smart-folders`.
-3. Relaunch Mailspring.
+Install the newer release through the in-app flow above. If you use the manual fallback, quit Mailspring, replace the `smart-folders` directory at the applicable package path, then relaunch Mailspring.
 
 Definitions are stored in Mailspring configuration under `smart-folders.definitions` and remain available across an in-place update.
 
@@ -63,7 +71,14 @@ Definitions are stored in Mailspring configuration under `smart-folders.definiti
 
 1. If you also want to discard saved definitions, delete them from the Smart Folders UI first.
 2. Quit Mailspring.
-3. Remove the installed `smart-folders` directory or symlink from Mailspring's `packages` directory.
+3. Remove the installed `smart-folders` directory from the applicable package path:
+
+   | Platform | Package path |
+   | --- | --- |
+   | macOS | `~/Library/Application Support/Mailspring/packages/smart-folders` |
+   | Windows | `%APPDATA%\Mailspring\packages\smart-folders` |
+   | Linux | `~/.config/Mailspring/packages/smart-folders` |
+
 4. Relaunch Mailspring.
 
 Removing the package does not mutate mail. Definitions left in Mailspring configuration are inert and reappear if the same package is installed again.
@@ -84,12 +99,11 @@ The test suite uses Node's built-in test runner and has no external dependencies
 - Saved definitions persist, but the currently focused Smart Folder is not restored as the initial view after an application restart.
 - A deterministic live external sync event was not generated during verification because the test plan forbids sending, moving, or deleting real mail. The plugin uses Mailspring's native `MutableQuerySubscription`; see `VERIFICATION.md`.
 
-## License and source review
+## License and source attribution
 
 This plugin is licensed under GNU GPL v3; see [LICENSE.md](LICENSE.md).
 
-Implementation was written independently against Mailspring's public plugin APIs and inspected source:
+Implementation was written independently against Mailspring's public plugin APIs:
 
 - [Foundry376/Mailspring](https://github.com/Foundry376/Mailspring), GPL-3.0.
 - [Foundry376/Mailspring-Plugin-Starter](https://github.com/Foundry376/Mailspring-Plugin-Starter), package metadata declares MIT.
-- [colinking/mailspring-inbox-filters](https://github.com/colinking/mailspring-inbox-filters), package metadata declares MIT, but the inspected repository revision had no root license file. No source was copied from it.

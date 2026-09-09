@@ -276,6 +276,55 @@ test('uses the empty perspective and explanatory message when no sources resolve
   assert.equal(state.queries.length, 0);
 });
 
+test('treats definition names and resolved category roles as perspective identity', () => {
+  const inbox = category('account-a', 'inbox-a');
+  const sources = [source('account-a', 'inbox-a')];
+  const {SmartFolderPerspective} = loadPerspective([inbox]);
+  const original = new SmartFolderPerspective(definition(sources));
+  const renamedDefinition = definition(sources);
+  renamedDefinition.name = 'Renamed Smart Folder';
+
+  assert.equal(
+    original.isEqual(new SmartFolderPerspective(renamedDefinition)),
+    false,
+    'same ID and sources with a different name',
+  );
+
+  const beforeRoleRemap = new SmartFolderPerspective(definition(sources));
+  inbox.role = 'spam';
+  const afterRoleRemap = new SmartFolderPerspective(definition(sources));
+
+  assert.equal(
+    beforeRoleRemap.isEqual(afterRoleRemap),
+    false,
+    'same ID and category with a changed resolved role',
+  );
+});
+
+test('identifies selections that need hidden messages revealed', () => {
+  const normal = category('account-a', 'inbox-a');
+  const spam = category('account-a', 'spam-a', 'spam');
+  const trash = category('account-a', 'trash-a', 'trash');
+  const secondSpam = category('account-b', 'spam-b', 'spam');
+  const cases = [
+    {name: 'no hidden sources', categories: [normal], expected: false},
+    {name: 'spam-only sources', categories: [spam], expected: false},
+    {name: 'trash-only sources', categories: [trash], expected: false},
+    {name: 'same-role hidden sources', categories: [spam, secondSpam], expected: false},
+    {name: 'normal and spam sources', categories: [normal, spam], expected: true},
+    {name: 'spam and trash sources', categories: [spam, trash], expected: true},
+  ];
+
+  cases.forEach(({name, categories, expected}) => {
+    const {SmartFolderPerspective} = loadPerspective(categories);
+    const perspective = new SmartFolderPerspective(
+      definition(categories.map(({accountId, id}) => source(accountId, id))),
+    );
+
+    assert.equal(perspective.needsHiddenMessagesRevealed(), expected, name);
+  });
+});
+
 test('applies normal, hidden, and mixed visibility rules through matcher evaluation', () => {
   const normal = category('account-a', 'inbox-a');
   const hidden = category('account-a', 'spam-a', 'spam');
