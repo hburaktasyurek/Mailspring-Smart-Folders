@@ -1,0 +1,65 @@
+name: Bug report
+description: Report a reproducible problem with Smart Folders.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Smart Folders. Do not include private mail data in this public issue: remove email addresses, subjects, account names, message content, and private local paths from every field, log, and screenshot.
+  - type: input
+    id: mailspring-version
+    attributes:
+      label: Mailspring version
+      description: Include the full version shown by Mailspring.
+      placeholder: "1.23.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Windows
+        - Linux
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Smart Folders version
+      description: Include the installed plugin version.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to reproduce
+      description: List the smallest set of steps that consistently shows the problem. Use generic folder and label names.
+      placeholder: |
+        1. Open …
+        2. Create or select …
+        3. Observe …
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: What did you expect Smart Folders to show or do?
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: What happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Logs or screenshots
+      description: Optional. Paste relevant logs or attach screenshots only after removing email addresses, subjects, account names, message content, and private local paths.

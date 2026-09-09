@@ -1,0 +1,31 @@
+name: Question
+description: Ask for help installing, using, or contributing to Smart Folders.
+title: "[Question]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a public issue. Do not include email addresses, subjects, account names, message content, or private local paths.
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options:
+        - Installation or update
+        - Creating or using Smart Folders
+        - Compatibility
+        - Contributing
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Describe what you are trying to do and where you are blocked. Use generic folder and label names.
+    validations:
+      required: true
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What have you tried?
+      description: Optional. Include relevant steps and versions after removing private mail and account data.

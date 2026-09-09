@@ -2,11 +2,25 @@
   "name": "smart-folders",
   "version": "0.1.0",
   "displayName": "Smart Folders",
-  "description": "Named virtual folders that combine exact Mailspring folders and labels across accounts.",
+  "description": "An open-source Mailspring plugin that combines exact folders and labels across accounts into read-only Smart Folders.",
   "repository": {
     "type": "git",
     "url": "https://github.com/hburaktasyurek/Mailspring-Smart-Folders.git"
   },
+  "homepage": "https://github.com/hburaktasyurek/Mailspring-Smart-Folders#readme",
+  "bugs": {
+    "url": "https://github.com/hburaktasyurek/Mailspring-Smart-Folders/issues"
+  },
+  "keywords": [
+    "mailspring",
+    "plugin",
+    "mailspring-plugin",
+    "smart-folders",
+    "virtual-folders",
+    "labels",
+    "imap",
+    "email-productivity"
+  ],
   "main": "./lib/main",
   "scripts": {
     "test": "node --test test/*.test.js"

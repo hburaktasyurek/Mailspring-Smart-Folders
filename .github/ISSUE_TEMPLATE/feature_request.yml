@@ -1,0 +1,38 @@
+name: Feature request
+description: Suggest an improvement to Smart Folders.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Smart Folders is read-only. Do not include email addresses, subjects, account names, message content, or private local paths in this public request.
+  - type: textarea
+    id: user-problem
+    attributes:
+      label: User problem
+      description: What workflow or limitation would this improve?
+      placeholder: Describe the problem using generic folder and label names.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-behavior
+    attributes:
+      label: Proposed behavior
+      description: Describe what you would expect Smart Folders to do.
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Give one or more generic examples of the intended workflow or result.
+      placeholder: Use placeholder account, folder, label, and message names only.
+    validations:
+      required: true
+  - type: textarea
+    id: privacy-and-read-only-impact
+    attributes:
+      label: Read-only and privacy implications
+      description: Explain how the request preserves read-only mail handling and avoids exposing private mail data.
+    validations:
+      required: true

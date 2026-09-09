@@ -1,6 +1,21 @@
 # Mailspring Smart Folders
 
-A general-purpose Mailspring plugin for named virtual folders that combine exact source folders or labels from one or more accounts. Smart Folders are read-only views: the plugin does not move, copy, delete, relabel, send, or otherwise mutate mail.
+[![CI](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/actions/workflows/test.yml/badge.svg)](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/actions/workflows/test.yml)
+[![License: GPL-3.0-only](https://img.shields.io/badge/License-GPL--3.0--only-blue.svg)](LICENSE.md)
+
+**Mailspring Smart Folders** is an open-source [Mailspring](https://www.getmailspring.com/) plugin for email productivity: create named, read-only virtual folders that combine exact IMAP folders or labels across one or more accounts. It uses Mailspring's normal thread list and reader, so a Smart Folder is a view of existing mail—not a server-side folder or a copy of messages.
+
+> **Read-only by design.** The plugin does not move, copy, delete, relabel, send, or otherwise mutate mail. It adds no services, telemetry, or secondary mail database, and works offline against Mailspring's synchronized mail.
+
+![Smart Folders in the Mailspring sidebar](assets/smart-folders-sidebar.png)
+
+## Quick start
+
+- **Install:** extract the checked-in [mailspring-smart-folders-0.1.0.zip](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/raw/main/dist/mailspring-smart-folders-0.1.0.zip) archive, then choose **Developer > Install a Plugin...** in Mailspring and select the extracted `smart-folders` directory.
+- **Create a view:** select **+** in the **Smart Folders** sidebar heading, name the view, select its source folders or labels, and select **Save**.
+- **Use it:** select the Smart Folder to load the union of its sources in Mailspring's normal thread list.
+- **Verified compatibility:** Mailspring `1.23.0-5b371811` on macOS `26.6.2`. Windows and Linux have not been tested.
+- **Need help or want to contribute?** Open a [GitHub Issue](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/issues) or read [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Features
 
@@ -12,23 +27,13 @@ A general-purpose Mailspring plugin for named virtual folders that combine exact
 - Persistent create, edit, and delete workflows.
 - Live native query subscriptions for synchronized data changes.
 - Explicit warnings for unavailable sources; remaining valid sources continue to work.
-- No additional packages, services, telemetry, or secondary mail database; works offline against Mailspring's synchronized mail.
 - Native menus use Mailspring's bundled `@electron/remote` on tested Mailspring `1.23.0`.
-
-## Compatibility
-
-Verified with:
-
-- Mailspring `1.23.0-5b371811`
-- macOS `26.6.2`
-
-`package.json` declares Mailspring `>=1.23.0`. Other Mailspring releases and operating systems were not exercised in this verification run.
 
 ## Install
 
-The release archive is self-contained; no build or `npm install` step is required.
+The checked-in installation archive is self-contained; no build or `npm install` step is required.
 
-1. Download and extract [mailspring-smart-folders-0.1.0.zip](dist/mailspring-smart-folders-0.1.0.zip).
+1. Download and extract [mailspring-smart-folders-0.1.0.zip](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/raw/main/dist/mailspring-smart-folders-0.1.0.zip).
 2. Keep Mailspring running. In Mailspring, choose **Developer > Install a Plugin...**.
 3. Select the extracted `smart-folders` directory.
 4. Confirm that **Smart Folders** appears in the main sidebar. Restart Mailspring only if it does not appear.
@@ -50,7 +55,7 @@ Use this fallback only when **Developer > Install a Plugin...** is unavailable:
 
 Only install plugin archives from sources you trust. Mailspring plugins execute inside the application and can access local mail data.
 
-## Use
+## First use
 
 1. Select the **+** button in the **Smart Folders** sidebar heading.
 2. Enter a name.
@@ -61,9 +66,18 @@ Only install plugin archives from sources you trust. Mailspring plugins execute 
 
 A missing folder or removed account is shown with an unavailable-source warning. Available sources continue to populate the Smart Folder. If no source remains available, the list shows an explanatory empty state. Editing the definition lets you remove unavailable sources.
 
+## Compatibility
+
+`package.json` declares Mailspring `>=1.23.0`. Verified with:
+
+- Mailspring `1.23.0-5b371811`
+- macOS `26.6.2`
+
+Other Mailspring releases and operating systems were not exercised in this verification run.
+
 ## Update
 
-Install the newer release through the in-app flow above. If you use the manual fallback, quit Mailspring, replace the `smart-folders` directory at the applicable package path, then relaunch Mailspring.
+Install a newer plugin archive through the in-app flow above. If you use the manual fallback, quit Mailspring, replace the `smart-folders` directory at the applicable package path, then relaunch Mailspring.
 
 Definitions are stored in Mailspring configuration under `smart-folders.definitions` and remain available across an in-place update.
 
@@ -83,6 +97,10 @@ Definitions are stored in Mailspring configuration under `smart-folders.definiti
 
 Removing the package does not mutate mail. Definitions left in Mailspring configuration are inert and reappear if the same package is installed again.
 
+## Support and contributions
+
+For questions, bugs, and feature requests, use [GitHub Issues](https://github.com/hburaktasyurek/Mailspring-Smart-Folders/issues). For project-specific setup, verification, privacy, and pull-request guidance, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Development verification
 
 ```sh
@@ -101,7 +119,7 @@ The test suite uses Node's built-in test runner and has no external dependencies
 
 ## License and source attribution
 
-This plugin is licensed under GNU GPL v3; see [LICENSE.md](LICENSE.md).
+This plugin is licensed under GNU GPL v3 only; see [LICENSE.md](LICENSE.md).
 
 Implementation was written independently against Mailspring's public plugin APIs:
 
