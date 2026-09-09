@@ -23,8 +23,13 @@ function loadSidebar({loadRemote, resourcePath = '/Mailspring.app/Contents/Resou
   const originalAppEnv = global.AppEnv;
   const hadWindow = Object.prototype.hasOwnProperty.call(global, 'window');
   const originalWindow = global.window;
+  const hadDocument = Object.prototype.hasOwnProperty.call(global, 'document');
+  const originalDocument = global.document;
+  const hadMutationObserver = Object.prototype.hasOwnProperty.call(global, 'MutationObserver');
+  const originalMutationObserver = global.MutationObserver;
   const state = {
     accounts: [{id: 'account-a'}],
+    accountSidebarSections: [],
     confirmDeletion: true,
     currentPerspective: null,
     definitions: [],
@@ -35,11 +40,13 @@ function loadSidebar({loadRemote, resourcePath = '/Mailspring.app/Contents/Resou
     focusedPerspectives: [],
     inboxPerspectives: [],
     menuItems: [],
+    mutationObservers: [],
     menus: [],
     popups: [],
     remoteRequests: [],
     removeCalls: [],
     storeListeners: new Set(),
+    portalTargets: new Set(),
   };
 
   class Component {
@@ -52,6 +59,48 @@ function loadSidebar({loadRemote, resourcePath = '/Mailspring.app/Contents/Resou
       this.state = {...this.state, ...nextState};
     }
   }
+
+  const body = {
+    contains(target) {
+      return state.portalTargets.has(target);
+    },
+  };
+  const document = {
+    body,
+    createElement() {
+      const element = {
+        className: '',
+        remove() {
+          state.portalTargets.delete(element);
+        },
+      };
+      return element;
+    },
+    querySelectorAll(selector) {
+      return selector === '.account-sidebar-sections' ? state.accountSidebarSections : [];
+    },
+  };
+  class MutationObserver {
+    constructor(callback) {
+      this.callback = callback;
+      this.disconnected = false;
+      state.mutationObservers.push(this);
+    }
+
+    observe(target, options) {
+      this.options = options;
+      this.target = target;
+    }
+
+    disconnect() {
+      this.disconnected = true;
+    }
+  }
+  state.triggerMutations = () => {
+    state.mutationObservers
+      .filter((observer) => observer.target && !observer.disconnected)
+      .forEach((observer) => observer.callback([], observer));
+  };
 
   class SmartFolderPerspective {
     constructor(definition) {
@@ -186,6 +235,8 @@ function loadSidebar({loadRemote, resourcePath = '/Mailspring.app/Contents/Resou
       return state.confirmDeletion;
     },
   };
+  global.document = document;
+  global.MutationObserver = MutationObserver;
 
   clearLibraryModules();
   Module._load = function loadWithFakes(request, parent, isMain) {
@@ -244,6 +295,16 @@ function loadSidebar({loadRemote, resourcePath = '/Mailspring.app/Contents/Resou
       global.window = originalWindow;
     } else {
       delete global.window;
+    }
+    if (hadDocument) {
+      global.document = originalDocument;
+    } else {
+      delete global.document;
+    }
+    if (hadMutationObserver) {
+      global.MutationObserver = originalMutationObserver;
+    } else {
+      delete global.MutationObserver;
     }
   };
 
@@ -351,6 +412,56 @@ function actionButton(row) {
 }
 
 
+test('waits for and attaches below All Accounts when the account sidebar appears', {concurrency: false}, () => {
+  withSidebar(({Sidebar, state}) => {
+    const sidebar = new Sidebar({});
+
+    sidebar._attachToAccountSidebar();
+    const observer = state.mutationObservers[0];
+
+    assert.equal(state.mutationObservers.length, 1);
+    assert.equal(observer.target, global.document.body);
+    assert.deepEqual(observer.options, {childList: true, subtree: true});
+
+    sidebar._attachToAccountSidebar();
+    assert.equal(state.mutationObservers.length, 1);
+
+    const allAccounts = {id: 'all-accounts'};
+    const nextSection = {id: 'next-section'};
+    const sections = {
+      children: [allAccounts, nextSection],
+      getClientRects() {
+        return [{}];
+      },
+      insertBefore(target, before) {
+        this.children.splice(this.children.indexOf(before), 0, target);
+        state.portalTargets.add(target);
+      },
+    };
+    state.accountSidebarSections = [sections];
+    state.triggerMutations();
+
+    assert.equal(sections.children[0], allAccounts);
+    assert.equal(sections.children[1], sidebar.state.portalTarget);
+    assert.equal(sections.children[2], nextSection);
+    assert.equal(observer.disconnected, true);
+  });
+});
+
+test('disconnects a pending account sidebar observer on unmount', {concurrency: false}, () => {
+  withSidebar(({Sidebar, state}) => {
+    const sidebar = new Sidebar({});
+
+    sidebar._attachToAccountSidebar();
+    const observer = state.mutationObservers[0];
+    sidebar.componentWillUnmount();
+    state.triggerMutations();
+
+    assert.equal(observer.disconnected, true);
+    assert.equal(sidebar.state.portalTarget, null);
+  });
+});
+
 test('opens the native Edit/Delete menu from a row context menu without React placement', {concurrency: false}, () => {
   withSidebar(({Menu, MenuItem, Sidebar, state}) => {
     const definition = createDefinition();
@@ -360,8 +471,8 @@ test('opens the native Edit/Delete menu from a row context menu without React pl
     const eventOrder = [];
 
     row.props.onContextMenu({
-      ['screen' + 'X']: Number.MAX_SAFE_INTEGER,
-      ['screen' + 'Y']: Number.MIN_SAFE_INTEGER,
+      screenX: Number.MAX_SAFE_INTEGER,
+      screenY: Number.MIN_SAFE_INTEGER,
       currentTarget: {
         focus() {
           eventOrder.push('focus');
@@ -399,8 +510,8 @@ test('opens the native Edit/Delete menu from an ellipsis click without React pla
     let stopped = 0;
 
     button.props.onClick({
-      ['screen' + 'X']: Number.MIN_SAFE_INTEGER,
-      ['screen' + 'Y']: Number.MAX_SAFE_INTEGER,
+      screenX: Number.MIN_SAFE_INTEGER,
+      screenY: Number.MAX_SAFE_INTEGER,
       stopPropagation() {
         stopped += 1;
       },
